@@ -30,4 +30,28 @@ class WeatherModel {
       return 'Bring a 🧥 just in case';
     }
   }
+  String getImage(int condition){
+    if (condition < 300) {
+      return '11d';
+    } else if (condition < 400) {
+      return '09d';
+    } else if (condition < 505) {
+      return '10d️';
+    } else if (condition < 505) {
+      return '10d️';
+    }else if (condition < 512) {
+      return '13d️';
+    }else if (condition < 600) {
+      return '09d️';
+    } else if (condition < 700) {
+      return '13d';
+    } else if (condition < 800) {
+      return '50d️';
+    } else if (condition <= 804) {
+      return '☁️';
+    } else {
+      return '🤷‍';
+    }
+
+  }
 }
