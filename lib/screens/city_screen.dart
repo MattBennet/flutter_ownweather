@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ownweather/presentation/splash_cubit.dart';
 import 'package:flutter_ownweather/utilities/constants.dart';
 
 class CityScreen extends StatefulWidget {
   @override
-  _CityScreenState createState() => _CityScreenState();
+  State<StatefulWidget> createState() => _State();
+
+  CityScreen._();
+
+  static Widget newInstance() {
+    return BlocProvider(
+      create: (_) => SplashCubit(),
+      child: CityScreen._(),
+    );
+  }
 }
 
-class _CityScreenState extends State<CityScreen> {
+class _State extends State<CityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
