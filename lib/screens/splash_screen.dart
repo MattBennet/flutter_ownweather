@@ -10,7 +10,6 @@ import 'package:flutter_ownweather/widget/loader_widget.dart';
 import 'package:flutter_ownweather/widget/retry_widget.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);
 
@@ -58,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     },
                   );
                 }
-                if(state is Success) {
+                if (state is Success) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
