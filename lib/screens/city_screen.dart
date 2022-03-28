@@ -68,7 +68,7 @@ class _State extends State<CityScreen> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            '${state.city.main.temp.toInt()}°',
+                            '${state.city.main.temp}°',
                             style: kTempTextStyle,
                           ),
                           Text(
