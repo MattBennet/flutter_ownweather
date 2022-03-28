@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_ownweather/presentation/splash_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ownweather/presentation/splash_state.dart';
@@ -11,11 +12,16 @@ import 'package:flutter_ownweather/widget/retry_widget.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key key}) : super(key: key);
-
   @override
-  _SplashScreenState createState() {
-    return _SplashScreenState();
+  State<StatefulWidget> createState() => _SplashScreenState();
+
+  SplashScreen._();
+
+  static Widget newInstance() {
+    return BlocProvider(
+      create: (_) => SplashCubit(),
+      child: SplashScreen._(),
+    );
   }
 }
 
@@ -24,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    _cubit.getCity();
     super.initState();
   }
 
@@ -35,46 +42,37 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Styles.bg,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.asset(Images.logo),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            BlocBuilder<SplashCubit, SplashState>(
-              builder: (ctx, state) {
-                if (state is Error) {
-                  return RetryWidget.withMessage(
-                    message: state.message,
-                    textColor: Colors.white,
-                    callback: () {
-                      _cubit.getCity();
-                    },
-                  );
-                }
-                if (state is Success) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CityScreen.newInstance(),
-                    ),
-                  );
-                }
-
-                return Center(
-                  child: SpinKitDoubleBounce(
-                    color: Colors.white,
-                    size: 100.0,
-                  ),
-                );
+      backgroundColor: Styles.bg,
+      body: BlocBuilder<SplashCubit, SplashState>(
+        builder: (ctx, state) {
+          if (state is Error) {
+            return RetryWidget.withMessage(
+              message: state.message,
+              textColor: Colors.white,
+              callback: () {
+                _cubit.getCity();
               },
+            );
+          }
+          if (state is Success) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CityScreen.newInstance(state.city),
+                ),
+              );
+            });
+          }
+
+          return Center(
+            child: SpinKitDoubleBounce(
+              color: Colors.white,
+              size: 100.0,
             ),
-          ],
-        ));
+          );
+        },
+      ),
+    );
   }
 }

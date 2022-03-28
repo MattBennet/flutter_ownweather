@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ownweather/domain/city.dart';
 import 'package:flutter_ownweather/presentation/splash_cubit.dart';
 import 'package:flutter_ownweather/utilities/constants.dart';
 
@@ -9,7 +10,7 @@ class CityScreen extends StatefulWidget {
 
   CityScreen._();
 
-  static Widget newInstance() {
+  static Widget newInstance(City city) {
     return BlocProvider(
       create: (_) => SplashCubit(),
       child: CityScreen._(),

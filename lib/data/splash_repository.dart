@@ -4,8 +4,8 @@ import '../domain/city.dart';
 
 class SplashRepository {
 
-  Future<City> getCity(int lat, int lon) async {
-    var resp = await Http.getInstance().post("weather", data: {
+  Future<City> getCity(double lat, double lon) async {
+    var resp = await Http.getInstance().post("weather", queryParameters: {
       "lat": lat,
       "lon": lon
     });

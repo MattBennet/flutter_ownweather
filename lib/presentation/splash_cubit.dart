@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_ownweather/core/exeptions.dart';
 import 'package:flutter_ownweather/data/splash_repository.dart';
 import 'package:flutter_ownweather/presentation/splash_state.dart';
+import 'package:flutter_ownweather/services/location.dart';
 import 'package:flutter_ownweather/utils/strings.dart';
 
 class SplashCubit extends Cubit<SplashState> {
@@ -11,10 +12,12 @@ class SplashCubit extends Cubit<SplashState> {
 
   void getCity() async {
     emit(Loading());
+    Location location = Location();
+    await location.getCurrentLocation();
     try {
-      var resp = await repo.getCity(lat, lon);
+      var resp = await repo.getCity(location.latitude, location.longitude);
 
-      emit(Success());
+      emit(Success(resp));
     } catch (e, stacktrace) {
       print(stacktrace);
       switch (e.runtimeType) {

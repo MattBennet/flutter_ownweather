@@ -1,16 +1,37 @@
 import 'package:dio/dio.dart';
-import '../main.dart';
+import 'package:flutter_ownweather/domain/Error.dart';
 import 'exeptions.dart';
 
 class AuthInterceptor extends InterceptorsWrapper {
   @override
   void onError(DioError err, handler) async {
-    if (err is BadRequest) {
-      throw err;
-    }
+    {
+      if (err.response == null) {
+        handler.reject(NoInternetConnection());
+      }
 
-    print(err);
-    return super.onError(err, handler);
+      var statusCode = err.response?.statusCode;
+
+      if (statusCode == 400) {
+        handler.reject(BadRequest(
+          Error.fromJson(err.response.data),
+        ));
+      }
+
+      if (statusCode >= 500 && statusCode <= 599) {
+        handler.reject(ServerInternal());
+      }
+
+      if (statusCode == 404) {
+        handler.reject(NotFound());
+      }
+
+      if (statusCode > 401 && statusCode <= 499) {
+        handler.reject(UnknownError());
+      }
+      print(err);
+      handler.next(err);
+    }
   }
 
   @override
